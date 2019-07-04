@@ -1,4 +1,24 @@
+  CYLS  EQU 0x0ff0
+  LEDS  EQU 0x0ff1
+  VMODE EQU 0x0ff2
+  SCRNX EQU 0x0ff4
+  SCRNY EQU 0x0ff6
+  VRAM  EQU 0x0ff8
+
   ORG 0xc200
+
+vga:
+  MOV AL, 0x13 ;  320x200x8bit
+  MOV AH, 0x00
+  INT 0x10
+  MOV BYTE [VMODE], 8
+  MOV BYTE [SCRNX], 320
+  MOV BYTE [SCRNY], 200
+  MOV DWORD [VRAM], 0x000a0000
+
+  MOV AH, 0x02 ; キーボードおしえてもらう?
+  INT 0x16
+  MOV [LEDS], AL
 
 ok:
   MOV AL, 0x6F

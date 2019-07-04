@@ -79,6 +79,8 @@ next:
   CMP CH, CYLS
   JB readloop
 
+  MOV [0x0ff0], byte CYLS
+
   JMP 0xc200
 
 error:
