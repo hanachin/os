@@ -1,3 +1,4 @@
-helloos1
-helloos2
-helloos3
+*.bin
+*.lst
+haribote.img
+haribote.sys
