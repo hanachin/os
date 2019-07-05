@@ -1,8 +1,8 @@
 default:
 	  make img
 
-ipl.bin : ipl.nas Makefile
-	  nasm ipl.nas -o ipl.bin -l ipl.lst
+ipl10.bin : ipl10.nas Makefile
+	  nasm ipl10.nas -o ipl10.bin -l ipl10.lst
 
 asmhead.bin : asmhead.nas Makefile
 	  nasm asmhead.nas -o asmhead.bin -l asmhead.lst
@@ -13,12 +13,12 @@ bootpack.hrb : bootpack.c har.ld Makefile
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	  cat asmhead.bin bootpack.hrb > haribote.sys
 
-haribote.img : ipl.bin haribote.sys Makefile
-		mformat -f 1440 -C -B ipl.bin -i haribote.img ::
+haribote.img : ipl10.bin haribote.sys Makefile
+		mformat -f 1440 -C -B ipl10.bin -i haribote.img ::
 	 	mcopy haribote.sys -i haribote.img ::
 
 asm :
-	  make -r ipl.bin
+	  make -r ipl10.bin
 
 img :
 	  make -r haribote.img
