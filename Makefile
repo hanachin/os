@@ -4,8 +4,14 @@ default:
 ipl.bin : ipl.nas Makefile
 	  nasm ipl.nas -o ipl.bin -l ipl.lst
 
-haribote.sys : haribote.nas Makefile
-	  nasm haribote.nas -o haribote.sys -l haribote.lst
+asmhead.bin : asmhead.nas Makefile
+	  nasm asmhead.nas -o asmhead.bin -l asmhead.lst
+
+bootpack.hrb : bootpack.c har.ld Makefile
+	gcc -fno-pic -march=i486 -m32 -nostdlib -T har.ld bootpack.c -o bootpack.hrb
+
+haribote.sys : asmhead.bin bootpack.hrb Makefile
+	  cat asmhead.bin bootpack.hrb > haribote.sys
 
 haribote.img : ipl.bin haribote.sys Makefile
 		mformat -f 1440 -C -B ipl.bin -i haribote.img ::

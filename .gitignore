@@ -1,4 +1,5 @@
 *.bin
 *.lst
+*.sys
+*.hrb
 haribote.img
-haribote.sys
