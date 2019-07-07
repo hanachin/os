@@ -2,4 +2,5 @@
 *.lst
 *.sys
 *.hrb
+*.o
 haribote.img

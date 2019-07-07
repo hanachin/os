@@ -79,7 +79,7 @@ next:
   CMP CH, CYLS
   JB readloop
 
-  MOV [0x0ff0], byte CYLS
+  MOV [0x0ff0], CH
 
   JMP 0xc200
 

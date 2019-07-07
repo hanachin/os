@@ -7,8 +7,11 @@ ipl10.bin : ipl10.nas Makefile
 asmhead.bin : asmhead.nas Makefile
 	  nasm asmhead.nas -o asmhead.bin -l asmhead.lst
 
-bootpack.hrb : bootpack.c har.ld Makefile
-	gcc -fno-pic -march=i486 -m32 -nostdlib -T har.ld bootpack.c -o bootpack.hrb
+naskfunc.o : naskfunc.nas
+	  nasm -g -f elf naskfunc.nas -o naskfunc.o
+
+bootpack.hrb : bootpack.c naskfunc.o har.ld Makefile
+		gcc -fno-pic -march=i486 -m32 -nostdlib -T har.ld bootpack.c naskfunc.o -o bootpack.hrb
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	  cat asmhead.bin bootpack.hrb > haribote.sys
