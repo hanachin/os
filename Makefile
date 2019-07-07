@@ -29,3 +29,6 @@ img :
 run :
 	  make img
 		qemu-system-i386 -fda haribote.img
+
+clean :
+	rm *.bin *.hrb *.img *.lst *.o *.sys
