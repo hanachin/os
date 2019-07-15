@@ -10,7 +10,7 @@ ipl10.bin : ipl10.nas Makefile
 asmhead.bin : asmhead.nas Makefile
 	  nasm asmhead.nas -o asmhead.bin -l asmhead.lst
 
-naskfunc.o : naskfunc.nas
+naskfunc.o : naskfunc.nas Makefile
 	  nasm -g -f elf naskfunc.nas -o naskfunc.o
 
 bootpack.hrb : bootpack.c naskfunc.o har.ld Makefile
