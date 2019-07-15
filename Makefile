@@ -1,7 +1,7 @@
 default:
 	  make img
 
-font.bin : mplus_q06r.bdf
+font.c : font.h gen_font.rb mplus_q06r.bdf
 		./gen_font.rb mplus_q06r.bdf
 
 ipl10.bin : ipl10.nas Makefile
