@@ -18,6 +18,12 @@
 #define COLOR_DARK_LIGHT_BLUE 14
 #define COLOR_DARK_GRAY 15
 
+struct BOOTINFO {
+  char cyls, leds, vmode, reserve;
+  short scrnx, scrny;
+  char *vram;
+};
+
 void io_hlt(void);
 void io_cli(void);
 void io_out8(int port, int data);
@@ -32,27 +38,29 @@ void HariMain(void)
 {
   init_palette();
 
-  char *p = (char *)0xa0000;
-  int xsize = 320, ysize = 200;
+  struct BOOTINFO *binfo = (struct BOOTINFO *)0x0ff0;
 
-  boxfill8(p, 320, COLOR_DARK_LIGHT_BLUE, 0, 0, xsize -1, ysize - 29); // 背景
+  char *vram = binfo->vram;
+  int xsize = binfo->scrnx, ysize = binfo->scrny;
 
-  boxfill8(p, 320, COLOR_GRAY, 0, ysize - 28, xsize -1, ysize - 28); // タスクバーのボーダー
-  boxfill8(p, 320, COLOR_WHITE, 0, ysize - 27, xsize -1, ysize - 27); // タスクバーのボーダーハイライト
-  boxfill8(p, 320, COLOR_GRAY, 0, ysize - 26, xsize -1, ysize - 1); // タスクバーのボーダー
+  boxfill8(vram, 320, COLOR_DARK_LIGHT_BLUE, 0, 0, xsize -1, ysize - 29); // 背景
 
-  boxfill8(p, 320, COLOR_WHITE,     3,  ysize - 24, 59, ysize - 24); // スタートボタンのボーダー↑
-  boxfill8(p, 320, COLOR_WHITE,     2,  ysize - 24,  2, ysize - 4); // スタートボタンのボーダー←
-  boxfill8(p, 320, COLOR_DARK_GRAY, 3,  ysize -  4, 59, ysize - 4); // スタートボタンのボーダー↓
-  boxfill8(p, 320, COLOR_DARK_GRAY, 59, ysize - 23, 59, ysize - 4); // スタートボタンのボーダー→
+  boxfill8(vram, 320, COLOR_GRAY, 0, ysize - 28, xsize -1, ysize - 28); // タスクバーのボーダー
+  boxfill8(vram, 320, COLOR_WHITE, 0, ysize - 27, xsize -1, ysize - 27); // タスクバーのボーダーハイライト
+  boxfill8(vram, 320, COLOR_GRAY, 0, ysize - 26, xsize -1, ysize - 1); // タスクバーのボーダー
 
-  boxfill8(p, 320, COLOR_BLACK,     2,  ysize -  3, 59, ysize - 3); // スタートボタンの影↓
-  boxfill8(p, 320, COLOR_BLACK,    60,  ysize - 24, 60, ysize - 3); // スタートボタンの影→
+  boxfill8(vram, 320, COLOR_WHITE,     3,  ysize - 24, 59, ysize - 24); // スタートボタンのボーダー↑
+  boxfill8(vram, 320, COLOR_WHITE,     2,  ysize - 24,  2, ysize - 4); // スタートボタンのボーダー←
+  boxfill8(vram, 320, COLOR_DARK_GRAY, 3,  ysize -  4, 59, ysize - 4); // スタートボタンのボーダー↓
+  boxfill8(vram, 320, COLOR_DARK_GRAY, 59, ysize - 23, 59, ysize - 4); // スタートボタンのボーダー→
 
-  boxfill8(p, 320, COLOR_DARK_GRAY, xsize - 47,  ysize - 24, xsize - 4, ysize - 24); // 時計とかでるとこ↑
-  boxfill8(p, 320, COLOR_DARK_GRAY, xsize - 47,  ysize - 23, xsize - 47, ysize - 4); // 時計とかでるとこ←
-  boxfill8(p, 320, COLOR_WHITE, xsize - 47,  ysize - 3, xsize - 4, ysize - 3); // 時計とかでるとこ→
-  boxfill8(p, 320, COLOR_WHITE, xsize - 3,  ysize - 24, xsize - 3, ysize - 3); // 時計とかでるとこ↓
+  boxfill8(vram, 320, COLOR_BLACK,     2,  ysize -  3, 59, ysize - 3); // スタートボタンの影↓
+  boxfill8(vram, 320, COLOR_BLACK,    60,  ysize - 24, 60, ysize - 3); // スタートボタンの影→
+
+  boxfill8(vram, 320, COLOR_DARK_GRAY, xsize - 47,  ysize - 24, xsize - 4, ysize - 24); // 時計とかでるとこ↑
+  boxfill8(vram, 320, COLOR_DARK_GRAY, xsize - 47,  ysize - 23, xsize - 47, ysize - 4); // 時計とかでるとこ←
+  boxfill8(vram, 320, COLOR_WHITE, xsize - 47,  ysize - 3, xsize - 4, ysize - 3); // 時計とかでるとこ→
+  boxfill8(vram, 320, COLOR_WHITE, xsize - 3,  ysize - 24, xsize - 3, ysize - 3); // 時計とかでるとこ↓
 
   for(;;) {
     io_hlt();
