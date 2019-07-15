@@ -13,8 +13,11 @@ asmhead.bin : asmhead.nas Makefile
 naskfunc.o : naskfunc.nas Makefile
 	  nasm -g -f elf naskfunc.nas -o naskfunc.o
 
-bootpack.hrb : bootpack.c naskfunc.o har.ld Makefile
-		gcc -fno-pic -march=i486 -m32 -nostdlib -T har.ld bootpack.c naskfunc.o -o bootpack.hrb
+%.o : %.c
+		gcc -c -fno-pic -march=i486 -m32 -nostdlib -o $*.o $*.c
+
+bootpack.hrb : bootpack.o naskfunc.o font.o har.ld Makefile
+		ld -m elf_i386 -T har.ld -e HariMain -o bootpack.hrb bootpack.o naskfunc.o
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	  cat asmhead.bin bootpack.hrb > haribote.sys
