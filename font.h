@@ -1,7 +1,8 @@
-struct font {
+#define FONT_WIDTH_MAX 6
+typedef struct font {
   unsigned char height;
   unsigned char width;
-  unsigned char offset_x;
-  unsigned char offset_y;
+  signed char offset_x;
+  signed char offset_y;
   unsigned char bitmap[8];
-};
+} Font;

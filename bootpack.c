@@ -1,3 +1,5 @@
+#include "font.h"
+
 #define COLOR_BLACK 0
 #define COLOR_RED 1
 #define COLOR_GREEN 2
@@ -33,6 +35,9 @@ void io_store_eflags(int eflags);
 void init_palette();
 void set_palette(int start, int end, unsigned char *rgb);
 void boxfill8(unsigned char *vram, int xsize, unsigned char color, int x0, int y0, int x1, int y1);
+Font *getfont(unsigned char c);
+void putstring(unsigned char *vram, int xsize, int x, int base, unsigned char color, unsigned char *s);
+void putfont(unsigned char *vram, int xsize, int x, int base, unsigned char color, Font *f);
 
 void HariMain(void)
 {
@@ -61,6 +66,10 @@ void HariMain(void)
   boxfill8(vram, 320, COLOR_DARK_GRAY, xsize - 47,  ysize - 23, xsize - 47, ysize - 4); // 時計とかでるとこ←
   boxfill8(vram, 320, COLOR_WHITE, xsize - 47,  ysize - 3, xsize - 4, ysize - 3); // 時計とかでるとこ→
   boxfill8(vram, 320, COLOR_WHITE, xsize - 3,  ysize - 24, xsize - 3, ysize - 3); // 時計とかでるとこ↓
+
+
+  putstring(vram, xsize, 20, 26, COLOR_WHITE, "hello, world!");
+  putstring(vram, xsize, 20, 46, COLOR_WHITE, "abcdefghijklmnopqrstuvwxyz");
 
   for(;;) {
     io_hlt();
@@ -115,6 +124,31 @@ void boxfill8(unsigned char *vram, int xsize, unsigned char color, int x0, int y
   for (int y = y0; y <= y1; y++) {
     for (int x = x0; x <= x1; x++) {
       vram[y * xsize + x] = color;
+    }
+  }
+}
+
+Font *getfont(unsigned char c) {
+  extern Font hankaku[256];
+  return hankaku + c;
+}
+
+void putstring(unsigned char *vram, int xsize, int x, int base, unsigned char color, unsigned char *s) {
+  while (*s) {
+    Font *f = getfont(*s);
+    putfont(vram, xsize, x, base, color, f);
+    x += f->width + 2;
+    s++;
+  }
+}
+
+void putfont(unsigned char *vram, int xsize, int x, int base, unsigned char color, Font *f) {
+  for (int i = 0; i < f->height; i++) {
+    unsigned char *p = vram + (base - f->height + i - f->offset_y) * xsize + x + f->offset_x;
+    for (int j = 0; j < f->width; j++) {
+      if ((f->bitmap[i]) & (0b10000000 >> j)) {
+        *(p + j) = color;
+      }
     }
   }
 }

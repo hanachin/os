@@ -17,7 +17,7 @@ naskfunc.o : naskfunc.nas Makefile
 		gcc -c -fno-pic -march=i486 -m32 -nostdlib -o $*.o $*.c
 
 bootpack.hrb : bootpack.o naskfunc.o font.o har.ld Makefile
-		ld -m elf_i386 -T har.ld -e HariMain -o bootpack.hrb bootpack.o naskfunc.o
+		ld -m elf_i386 -T har.ld -e HariMain -o bootpack.hrb bootpack.o naskfunc.o font.o
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	  cat asmhead.bin bootpack.hrb > haribote.sys
@@ -37,4 +37,4 @@ run :
 		qemu-system-i386 -fda haribote.img
 
 clean :
-	rm *.bin *.hrb *.img *.lst *.o *.sys
+	rm *.bin *.hrb *.img *.lst *.o *.sys font.c

@@ -8,8 +8,13 @@ Character = Struct.new(:code, :height, :width, :offset_x, :offset_y, :bitmap)
 def render(chars)
   erb = ERB.new(<<~C)
   #include "font.h"
-  struct font hankaku[256] = {
-  <% chars.each do |c| %>
+  Font hankaku[256] = {
+  <%
+    (0..255).each do |code|
+      c = chars.detect { @1.code == code } || Character.new(code, 0, 0, 0, 0, [])
+  %>
+    // <%= code.chr.inspect %>
+    // <%= code.to_s(16) %>
     {
       .height = <%= c.height %>,
       .width = <%= c.width %>,
@@ -28,8 +33,9 @@ def generate_font(bdf)
   chars = sections.select { @1.start_with?('STARTCHAR 0x00') }
   chars = chars.select { @1.include?("BITMAP") }
   chars = chars.map do
-    _bbx, height, width, offset_x, offset_y = @1.match(/^BBX (\-?\d+) (\-?\d+) (\-?\d+) (\-?\d+)\n/).to_a.map(&:to_i)
+    _bbx, width, height, offset_x, offset_y = @1.match(/^BBX (\-?\d+) (\-?\d+) (\-?\d+) (\-?\d+)\n/).to_a.map(&:to_i)
     bitmap_index = @1.lines.index { @1 =~ /^BITMAP$/ }
+    c = @1
     bitmap = @1.lines[bitmap_index + 1, height].map { @1.to_i(16) }
 
     raise if height > BITMAP_MAX
