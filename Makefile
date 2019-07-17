@@ -14,9 +14,9 @@ naskfunc.o : naskfunc.nas Makefile
 	  nasm -g -f elf naskfunc.nas -o naskfunc.o
 
 %.o : %.c
-		gcc -c -fno-pic -march=i486 -m32 -nostdlib -o $*.o $*.c
+		gcc -O0 -c -fno-pic -march=i486 -m32 -nostdlib -o $*.o $*.c
 
-bootpack.hrb : bootpack.o naskfunc.o font.o har.ld Makefile
+bootpack.hrb : bootpack.o naskfunc.o font.o mathfont.h mathfont_f.inc mathfont.inc har.ld Makefile
 		ld -m elf_i386 -T har.ld -e HariMain -o bootpack.hrb bootpack.o naskfunc.o font.o
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
